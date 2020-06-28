@@ -100,6 +100,17 @@ RUN echo "export VISUAL=${EDITOR}" >> $HOME/.bashrc
 RUN echo "set -o vi" >> $HOME/.bashrc
 RUN echo "alias vi=nvim" >> $HOME/.bashrc
 
+# Setup fortran language server useage ingnore case
+RUN echo "{" > $HOME/.fortls
+RUN echo '  "excl_suffixes": ["_skip.f90"],' >> $HOME/.fortls
+RUN echo '  "pp_suffixes": [".f03", ".F90"],' >> $HOME/.fortls
+RUN echo '  "pp_defs": {"HAVE_PACKAGE": ""},' >> $HOME/.fortls
+RUN echo '  "lowercase_intrinsics": true,' >> $HOME/.fortls
+RUN echo '  "debug_log": false' >> $HOME/.fortls
+RUN echo "}" > $HOME/.fortls
+
+
+
 USER $FT_UID
 WORKDIR $HOME
 
