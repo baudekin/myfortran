@@ -10,7 +10,7 @@ Plug 'ncm2/float-preview.nvim'
 "Support float-priview https://github.com/liuchengxu/vim-clap"
 Plug 'liuchengxu/vim-clap'
 "Manage bracket, aprens quotes in pair https://github.com/jiangmiao/auto-pairs"
-Plug 'jiangmiao/auto-pairs', { 'tag': 'v2.0.0' }
+"Plug 'jiangmiao/auto-pairs', { 'tag': 'v2.0.0' }
 "Code snippet solution https://github.com/SirVer/ultisnips"
 Plug 'SirVer/ultisnips'
 "Async syntax checker https://github.com/dense-analysis/ale"
@@ -18,11 +18,63 @@ Plug 'w0rp/ale'
 "Intellisense engine https://github.com/neoclide/coc.nvim"
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Fortran IDE https://rudrab.github.io/vimf90/"
-"Plug 'rudrab/vimf90'
+Plug 'rudrab/vimf90'
 "Warm Desert Color scheme https://github.com/rainux/vim-desert-warm-256"
 Plug 'rainux/vim-desert-warm-256'
 
 call plug#end()
+
+" --- Text Formatting ---
+filetype plugin indent on
+syntax on
+set nowrap
+set textwidth=79
+set formatoptions=n
+
+if exists("+colorcolumn")
+  set colorcolumn=80
+endif
+
+
+" Fortran Settings
+" Neovim indent see https://github.com/neovim/neovim/blob/master/runtime/doc/indent.txt
+" and help ft-fortran-syntax
+let fortran_have_tabs=0    " Tabs are evils never allow in fortran
+let fortran_fold=1         " Enable prog, subprog, func, subroutines foldering
+let fortran_fold_conditionls=1 " Enable loop foldering
+let fortran_fold_multilinecomments=0  "Disable multile comments folding
+let fortran_more_precise=1 " Syntax highlight labels "slows things down!!"
+let fortran_do_enddo = 2
+let fortran_indent_less = 1
+
+" vimf90
+let g:VimF90Leader = "`"
+let g:VimF90Linter = 1
+
+" Choose the correct file settings for give fortran version
+let s:extfname = expand("%:e")
+if s:extfname ==? "f90"
+   let b:fortran_dialect="F"
+   let b:fortran_free_source=1  " Always assume always free-form for F90 and above
+elseif s:extfname =~ "[F,f][0-9][0-9]"
+  unlet! b:fortran_dialect
+  let b:fortran_free_source=0
+  if exists("+colorcolumn")
+    set colorcolumn=64
+    set textwidth=63
+    set wrap
+    set formatoptions="tc"
+  endif
+endif
+
+" Neovim indetnt C/C++ settings
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set autoindent
+set smartindent
+set expandtab
+set shiftround
 
 set completeopt=noinsert,noselect,menuone
 
@@ -31,20 +83,6 @@ set t_Co=256
 set background=dark
 colorscheme desert-warm-256
 
-" --- Text Formatting ---
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set expandtab
-set shiftround
-
-set nowrap
-set textwidth=79
-set formatoptions=n
-
-if exists("+colorcolumn")
-  set colorcolumn=80
-endif
 
 " --- Display Trailing White Spaces ---"
 set list listchars=tab:▷⋅,trail:⋅,nbsp:⋅"
@@ -180,7 +218,7 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+set statusline^=%F\ %l\:%c%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
 " Show all diagnostics.
