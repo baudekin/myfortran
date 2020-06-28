@@ -50,6 +50,7 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get -y install python3-pip lua5.3
 RUN pip3 install --upgrade clang
+RUN pip3 install --upgrade ipython sympy
 # Prep nodejs for neovim
 RUN npm install -g neovim
 RUN npm install -g yarn
@@ -93,6 +94,9 @@ COPY ./config $HOME/.config
 # Fix the Permissions
 RUN chown -R $FT_USER:$FT_GID $HOME
 
+USER $FT_UID
+WORKDIR $HOME
+
 # Setup vi usage
 RUN echo "export EDITOR=/usr/local/bin/nvim" >> $HOME/.bashrc
 RUN echo "export FCEDIT=${EDITOR}" >> $HOME/.bashrc
@@ -107,12 +111,13 @@ RUN echo '  "pp_suffixes": [".f03", ".F90"],' >> $HOME/.fortls
 RUN echo '  "pp_defs": {"HAVE_PACKAGE": ""},' >> $HOME/.fortls
 RUN echo '  "lowercase_intrinsics": true,' >> $HOME/.fortls
 RUN echo '  "debug_log": false' >> $HOME/.fortls
-RUN echo "}" > $HOME/.fortls
+RUN echo "}" >> $HOME/.fortls
 
+# Setup ipython with default profile
+RUN ipython profile create
+## Use vi binding for ipython
+RUN echo "c.TerminalInteractiveShell.editing_mode = 'vi'" >> $HOME/.ipython/profile_default/ipython_config.py
 
-
-USER $FT_UID
-WORKDIR $HOME
 
 # Install neovim plugin manager
 RUN curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
