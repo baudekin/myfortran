@@ -27,12 +27,12 @@ remote/host: generated rplugin manifest: /home/baudekin/.local/share/nvim/rplugi
 
 ### Run
 
-1. Create a new volume which can be reused in subscant runs.
+#. Create a new volume which can be reused in subscant runs.
 ```bash
 docker volume create baudekin_home
 ```
 
-1. Run the container:
+#. Run the container:
 ```bash
 docker run --name fortran-dev --mount source=baudekin_home,target=/home/baudekin -it --rm fortran-dev
 ```
