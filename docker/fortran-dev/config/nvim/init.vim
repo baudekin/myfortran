@@ -44,8 +44,8 @@ let fortran_fold=1         " Enable prog, subprog, func, subroutines foldering
 let fortran_fold_conditionls=1 " Enable loop foldering
 let fortran_fold_multilinecomments=0  "Disable multile comments folding
 let fortran_more_precise=1 " Syntax highlight labels "slows things down!!"
-let fortran_do_enddo = 2
-let fortran_indent_less = 1
+let fortran_do_enddo=1
+let fortran_indent_less=1
 
 " vimf90
 let g:VimF90Leader = "`"
@@ -54,8 +54,9 @@ let g:VimF90Linter = 1
 " Choose the correct file settings for give fortran version
 let s:extfname = expand("%:e")
 if s:extfname ==? "f90"
-   let b:fortran_dialect="F"
-   let b:fortran_free_source=1  " Always assume always free-form for F90 and above
+  let b:fortran_dialect="F"
+  let b:fortran_free_source=1  " Always assume always free-form for F90 and above
+  unlet! b:fortran_dialect
 elseif s:extfname =~ "[F,f][0-9][0-9]"
   unlet! b:fortran_dialect
   let b:fortran_free_source=0
@@ -82,6 +83,7 @@ set completeopt=noinsert,noselect,menuone
 set t_Co=256
 set background=dark
 colorscheme desert-warm-256
+set number
 
 
 " --- Display Trailing White Spaces ---"
